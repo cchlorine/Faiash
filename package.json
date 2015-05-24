@@ -1,0 +1,21 @@
+{
+  "name": "Faiash",
+  "author": "Rakume Hayashi",
+  "homepage": "http://github.com/Kunr/Faiash",
+  "description": "A Javascript Framework based on CoffeeScript",
+  "version": "0.1.0",
+  "keywords": [
+    "Javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Kunr/Faiash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kunr/Faiash/issues"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/Kunr/Faiash/blob/master/LICENSE"
+  }
+}
