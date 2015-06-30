@@ -2,7 +2,7 @@
   "name": "Faiash",
   "author": "Rakume Hayashi",
   "homepage": "http://github.com/Kunr/Faiash",
-  "description": "A Javascript Framework based on CoffeeScript",
+  "description": "A Javascript Framework.",
   "version": "0.1.0",
   "keywords": [
     "Javascript"
