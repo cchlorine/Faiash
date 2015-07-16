@@ -27,6 +27,12 @@ var init = Faiash.ise.init = function(selector, context) {
         return this;
     }
 
+    if (selector === doucment) {
+        return document;
+    } else if (selector === window) {
+        return window;
+    }
+
     // When context is string
     if (typeof context == 'string') {
         context = document.querySelector(context);
