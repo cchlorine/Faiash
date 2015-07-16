@@ -1,5 +1,5 @@
 /**
- * Classes
+ * Attributes / Classes
  *
  * @author Rakume Hayashi<i@fake.moe>
  */
