@@ -12,13 +12,13 @@ Faiash.ise.extend({
         }
 
         if (document.body.classList) {
-            for (var i = 0; i < this.length; i++) {
-                this[i].classList.add(v);
-            }
+            this.each(function(el) {
+                el.classList.add(v);
+            });
         } else {
-            for (var i = 0; i < this.length; i++) {
-                this[i].className += ' ' + v;
-            }
+            this.each(function(el) {
+                el.className += ' ' + v;
+            });
         }
 
         return this;
@@ -31,13 +31,13 @@ Faiash.ise.extend({
         }
 
         if (document.body.classList) {
-            for (var i = 0; i < this.length; i++) {
-                this[i].classList.remove(v);
-            }
+            this.each(function(el) {
+                el.classList.remove(v);
+            });
         } else {
-            for (var i = 0; i < this.length; i++) {
-                this[i].className = this[i].className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-            }
+            this.each(function(el) {
+                el.className = el.className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            });
         }
 
         return this;
@@ -52,13 +52,13 @@ Faiash.ise.extend({
         }
 
         if (document.body.classList) {
-            for (var i = 0; i < this.length; i++) {
-                check = this[i].classList.contains(v);
-            }
+            this.each(function(el) {
+                check = el.classList.contains(v);
+            });
         } else {
-            for (var i = 0; i < this.length; i++) {
-                check = new RegExp('(^|)' + cls + '(|$)', 'gi').test(this[i].className);
-            }
+            this.each(function(el) {
+                check = new RegExp('(^|)' + cls + '(|$)', 'gi').test(el.className);
+            });
         }
 
         if (check) {
@@ -75,17 +75,17 @@ Faiash.ise.extend({
         }
 
         if (document.body.classList) {
-            for (var i = 0; i < this.length; i++) {
-                this[i].classList.toggle(v);
-            }
+            this.each(function(el) {
+                el.classList.toggle(v);
+            });
         } else {
-            for (var i = 0; i < this.length; i++) {
-                if (this[i].className.indexOf(v) >= 0) {
-                    this[i].className = this[i].className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            this.each(function(el) {
+                if (el.className.indexOf(v) >= 0) {
+                    el.className = el.className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
                 } else {
-                    this[i].className += ' ' + v;
+                    el.className += ' ' + v;
                 }
-            }
+            });
         }
     }
 });
