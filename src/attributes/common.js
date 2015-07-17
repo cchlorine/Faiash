@@ -8,12 +8,20 @@ Faiash.ise.extend({
     attr: function() {
         var args = $.toArr(arguments);
 
-        if (args[1]) {
-            if (typeof args[0] === 'string') {
+        if (args[1] && typeof args[0] === 'string') {
+            this.each(function(el) {
+                el.setAttribute(args[0], args[1]);
+            });
+        } else if (typeof args[0] === 'object'){
+            Faiash.each(args, function(obj) {
                 this.each(function(el) {
-                    el.setAttribute(args[0], args[1]);
+                    for (var attr in obj) {
+                        if (object.hasOwnProperty(attr)) {
+                            el.setAttribute(attr, obj[event][1]);
+                        }
+                    }
                 });
-            }
+            });
         } else {
             return this[0].getAttribute(args[0]);
         }
