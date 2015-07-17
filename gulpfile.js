@@ -16,7 +16,7 @@ gulp.task('rjs', function () {
     gulp.src([
             './src/intro.js',
             './src/core.js',
-            './src/**.js',
+            './src/**/*.js',
             './src/outro.js'
         ])
         .pipe(concat('faiash.js'))
@@ -27,9 +27,7 @@ gulp.task('rjs', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('./src/js/**/*.js', function () {
-        gulp.run('lint', 'rjs');
-    });
+    gulp.watch('./src/**.js', ['lint', 'rjs']);
 });
 
 gulp.task('default', function() {
