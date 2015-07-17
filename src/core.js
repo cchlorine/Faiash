@@ -79,3 +79,16 @@ Faiash.extend = Faiash.ise.extend = function() {
 
     return this;
 }
+
+Faiash.extend({
+    each: function(arr, func) {
+        var forEach = Function.prototype.call.bind(Array.prototype.forEach);
+        return forEach(arr, func);
+    }
+});
+
+Faiash.ise.extend({
+    each: function(func) {
+        return Faiash.each(this, func);
+    }
+});
