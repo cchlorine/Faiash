@@ -14,10 +14,6 @@ Faiash.ise = Faiash.prototype = {
     version: 0.1,
     constructor: Faiash,
 
-    toArr: function(r) {
-        return Array.prototype.slice.apply(r);
-    },
-
     // Behaves like array
     push: [].push,
 	sort: [].sort,
@@ -81,6 +77,10 @@ Faiash.extend = Faiash.ise.extend = function() {
 }
 
 Faiash.extend({
+    toArr: function(r) {
+        return Array.prototype.slice.apply(r);
+    },
+
     each: function(arr, func) {
         var forEach = Function.prototype.call.bind(Array.prototype.forEach);
         return forEach(arr, func);
