@@ -12,8 +12,11 @@ var Faiash = function(selector, context) {
 Faiash.ise = Faiash.prototype = {
     // Version of Faiash
     version: 0.1,
-
     constructor: Faiash,
+
+    toArr: function(r) {
+        return Array.prototype.slice.apply(r);
+    },
 
     // Behaves like array
     push: [].push,

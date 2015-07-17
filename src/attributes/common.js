@@ -6,22 +6,24 @@
 
 Faiash.ise.extend({
     attr: function() {
-        if (arguments[1]) {
-            if (typeof arguments[0] === 'string') {
+        var args = $.toArr(arguments);
+
+        if (args[1]) {
+            if (typeof args[0] === 'string') {
                 for (var i = 0; i < this.length; i++) {
-                    this[i].setAttribute(arguments[0], arguments[1]);
+                    this[i].setAttribute(args[0], args[1]);
                 }
             } else {
-                for (var i = 0; i < arguments.length; i++) {
-                    for (var attr in arguments[i]) {
+                for (var i = 0; i < args.length; i++) {
+                    for (var attr in args[i]) {
                         if (object.hasOwnProperty(attr)) {
-                            this[i].setAttribute(arguments[0], arguments[1]);
+                            this[i].setAttribute(args[0], args[1]);
                         }
                     }
                 }
             }
         } else {
-            return this[0].getAttribute(arguments[0]);
+            return this[0].getAttribute(args[0]);
         }
 
         return this;

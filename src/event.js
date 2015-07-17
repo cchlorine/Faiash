@@ -6,9 +6,11 @@
 
 Faiash.ise.extend({
     bind: function() {
-        if (typeof arguments[0] === 'string') {
+        var args = $.toArr(arguments);
+
+        if (typeof args[0] === 'string') {
             for (var i = 0; i < this.length; i++) {
-                this[i].addEventListener(arguments[0], arguments[1], arguments[2]);
+                this[i].addEventListener(args[0], args[1], args[2]);
             }
         } else {
             for (var i = 0; i < this.length; i++) {
@@ -22,9 +24,11 @@ Faiash.ise.extend({
     },
 
     unbind: function() {
-        if (typeof arguments[0] === 'string') {
+        var args = $.toArr(arguments);
+
+        if (typeof args[0] === 'string') {
             for (var i = 0; i < this.length; i++) {
-                this[i].removeEventListener(arguments[0], arguments[1], arguments[2]);
+                this[i].removeEventListener(args[0], args[1], args[2]);
             }
         } else {
             for (var i = 0; i < this.length; i++) {
