@@ -43,5 +43,14 @@ Faiash.ise.extend({
         });
 
         return this.style.cssText;
+    },
+
+    html: function(v) {
+        if (!v) {
+            return this;
+        }
+
+        this.innerHTML = v;
+        return this;
     }
 });
