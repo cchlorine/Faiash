@@ -26,17 +26,17 @@ var init = Faiash.ise.init = function(selector, context) {
         return this;
     }
 
-    // When selector is an objcet
-    if (typeof selector === 'object') {
-        return selector;
-    }
-
     // When context is string
     if (typeof context === 'string') {
         context = document.querySelector(context);
     }
 
-    selector = (context || document).querySelectorAll(selector);
+    // When selector is an objcet
+    if (typeof selector === 'object') {
+        return [].push.call(this, selector);
+    } else {
+        selector = (context || document).querySelectorAll(selector);
+    }
 
     for (i = 0; i < +selector.length; i++) {
         this[i] = selector[i];
@@ -84,11 +84,25 @@ Faiash.extend({
     each: function(arr, func) {
         var forEach = Function.prototype.call.bind(Array.prototype.forEach);
         return forEach(arr, func);
+    },
+
+    ready: function(callback) {
+        return Faiash(document).ready(callback);
     }
 });
 
 Faiash.ise.extend({
     each: function(func) {
         return Faiash.each(this, func);
+    },
+
+    ready: function(callback) {
+        if (this[0].readyState != 'loading') {
+            callback();
+        } else {
+            this[0].addEventListener('DOMContentLoaded', callback);
+        }
+
+        return this;
     }
 });
