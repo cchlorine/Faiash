@@ -27,6 +27,8 @@ Faiash.ise.extend({
                 });
             });
         }
+
+        return this;
     },
 
     off: function() {
@@ -47,5 +49,7 @@ Faiash.ise.extend({
                 });
             });
         }
+
+        return this;
     }
 });

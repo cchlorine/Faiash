@@ -87,5 +87,7 @@ Faiash.ise.extend({
                 }
             });
         }
+
+        return this;
     }
 });

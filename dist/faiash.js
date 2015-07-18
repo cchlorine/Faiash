@@ -257,6 +257,8 @@ Faiash.ise.extend({
                 });
             });
         }
+
+        return this;
     },
 
     off: function() {
@@ -277,6 +279,8 @@ Faiash.ise.extend({
                 });
             });
         }
+
+        return this;
     }
 });
 
@@ -380,6 +384,8 @@ Faiash.ise.extend({
                 }
             });
         }
+
+        return this;
     }
 });
 
@@ -427,7 +433,7 @@ Faiash.ise.extend({
             el.style.cssText += (';' + v);
         });
 
-        return this.style.cssText;
+        return this;
     },
 
     html: function(v) {
