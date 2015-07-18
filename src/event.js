@@ -5,7 +5,7 @@
  */
 
 Faiash.ise.extend({
-    bind: function() {
+    on: function() {
         var args = $.toArr(arguments);
 
         if (typeof args[0] === 'string') {
@@ -29,7 +29,7 @@ Faiash.ise.extend({
         }
     },
 
-    unbind: function() {
+    off: function() {
         var args = $.toArr(arguments);
 
         if (typeof args[0] === 'string') {
