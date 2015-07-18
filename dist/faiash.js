@@ -424,7 +424,7 @@ Faiash.ise.extend({
         }
 
         this.each(function(el) {
-            el.cssText += (';' + v);
+            el.style.cssText += (';' + v);
         });
 
         return this.style.cssText;
