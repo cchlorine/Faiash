@@ -438,10 +438,13 @@ Faiash.ise.extend({
 
     html: function(v) {
         if (!v) {
-            return this;
+            return this[0].innerHTML;
         }
 
-        this.innerHTML = v;
+        this.each(function(el) {
+            el.innerHTML = v;
+        })
+
         return this;
     }
 });
