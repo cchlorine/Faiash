@@ -160,12 +160,12 @@ Faiash.extend({
         }
 
         // Get the callback
-        if (typeof args[0] !== 'function') {
+        if (typeof args[0] === 'function') {
             callback = args.shift();
         }
 
         // Get the error
-        if (typeof args[0] !== 'function') {
+        if (typeof args[0] === 'function') {
             error = args.shift();
         }
 
@@ -189,7 +189,7 @@ Faiash.extend({
 
                         // When the data is json
                         if ((this.getResponseHeader('Content-Type') || '').match(/json/)) {
-                            _data = JSON.parse(data || null);
+                            _data = JSON.parse(_data || null);
                         }
 
                         // Cache it
