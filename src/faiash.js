@@ -17,8 +17,8 @@ var Faiash = (function() {
 
         // Behaves like array
         push: [].push,
-    	sort: [].sort,
-    	splice: [].splice
+    	  sort: [].sort,
+    	  splice: [].splice
     };
 
     var init = Faiash.ise.init = function(selector, context) {
