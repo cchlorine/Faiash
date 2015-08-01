@@ -1,9 +1,8 @@
 var gulp = require('gulp'),
-    concat = require('gulp-concat');
-    jshint = require('gulp-jshint');
-    uglify = require('gulp-uglify');
-    rename = require('gulp-rename');
-    amdOptimize = require("amd-optimize");
+    concat = require('gulp-concat'),
+    jshint = require('gulp-jshint'),
+    uglify = require('gulp-uglify'),
+    rename = require('gulp-rename'),
     watch = require('gulp-watch');
 
 gulp.task('lint', function () {
@@ -14,10 +13,8 @@ gulp.task('lint', function () {
 
 gulp.task('rjs', function () {
     gulp.src([
-            './src/intro.js',
-            './src/core.js',
-            './src/**/*.js',
-            './src/outro.js'
+            './src/faiash.js',
+            './src/**/*.js'
         ])
         .pipe(concat('faiash.js'))
         .pipe(gulp.dest('dist'))
