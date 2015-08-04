@@ -1,10 +1,10 @@
-;(function($) {
-    /**
-     * Event
-     *
-     * @author Rakume Hayashi<i@fake.moe>
-     */
+/**
+ * Event
+ *
+ * @author Rakume Hayashi<i@fake.moe>
+ */
 
+;(function($) {
     $.ise.extend({
         on: function() {
             var args = $.toArr(arguments);

@@ -1,10 +1,10 @@
-var Faiash = (function() {
-    /**
-     * Faiash Core
-     *
-     * @author Rakume Hayashi<i@fake.moe>
-     */
+/**
+ * Faiash Core
+ *
+ * @author Rakume Hayashi<i@fake.moe>
+ */
 
+var Faiash = (function() {
     // Define the Faiash
     var Faiash = function(selector, context) {
         return new Faiash.ise.init(selector, context);
@@ -17,8 +17,8 @@ var Faiash = (function() {
 
         // Behaves like array
         push: [].push,
-    	sort: [].sort,
-    	splice: [].splice
+    	  sort: [].sort,
+    	  splice: [].splice
     };
 
     var init = Faiash.ise.init = function(selector, context) {
@@ -239,72 +239,14 @@ if (typeof module === "object" && typeof module.exports === "object") {
   });
 })(Faiash);
 
-;(function($) {
-    /**
-     * Event
-     *
-     * @author Rakume Hayashi<i@fake.moe>
-     */
+/**
+ * Dom
+ *
+ * @author Rakume Hayashi<i@fake.moe>
+ */
 
+;(function($) {
     $.ise.extend({
-        on: function() {
-            var args = $.toArr(arguments);
-
-            if (typeof args[0] === 'string') {
-                if (!args[0] || !args[1]) {
-                    return this;
-                }
-
-                this.each(function(el) {
-                    el.addEventListener(args[0], args[1], (args[2] ? args[2] : false));
-                });
-            } else if (typeof args[0] === 'object') {
-                $.each(args, function(obj) {
-                    this.each(function(el) {
-                        for (var event in obj) {
-                            if (object.hasOwnProperty(event)) {
-                                el.addEventListener(event, obj[event][1]);
-                            }
-                        }
-                    });
-                });
-            }
-
-            return this;
-        },
-
-        off: function() {
-            var args = $.toArr(arguments);
-
-            if (typeof args[0] === 'string') {
-                this.each(function(el) {
-                    el.removeEventListener(args[0], args[1], args[2]);
-                });
-            }  else if (typeof args[0] === 'object' && args.length === 1) {
-                $.each(args, function(obj) {
-                    this.each(function(el) {
-                        for (var event in obj) {
-                            if (object.hasOwnProperty(event)) {
-                                el.removeEventListener(event, obj[event][1]);
-                            }
-                        }
-                    });
-                });
-            }
-
-            return this;
-        }
-    });
-})(Faiash);
-
-;(function($) {
-    /**
-     * Attributes / Classes
-     *
-     * @author Rakume Hayashi<i@fake.moe>
-     */
-
-    Faiash.ise.extend({
         addClass: function(v) {
             // Return false when v is '', void, undefined, false or when v is not a string
             if (!v || typeof v !== 'string') {
@@ -389,18 +331,8 @@ if (typeof module === "object" && typeof module.exports === "object") {
             }
 
             return this;
-        }
-    });
-})(Faiash);
+        },
 
-;(function($) {
-    /**
-     * Attributes / Common
-     *
-     * @author Rakume Hayashi<i@fake.moe>
-     */
-
-    $.ise.extend({
         attr: function() {
             var args = $.toArr(arguments);
 
@@ -449,6 +381,63 @@ if (typeof module === "object" && typeof module.exports === "object") {
             this.each(function(el) {
                 el.innerHTML = v;
             })
+
+            return this;
+        }
+    });
+})(Faiash);
+/**
+ * Event
+ *
+ * @author Rakume Hayashi<i@fake.moe>
+ */
+
+;(function($) {
+    $.ise.extend({
+        on: function() {
+            var args = $.toArr(arguments);
+
+            if (typeof args[0] === 'string') {
+                if (!args[0] || !args[1]) {
+                    return this;
+                }
+
+                this.each(function(el) {
+                    el.addEventListener(args[0], args[1], (args[2] ? args[2] : false));
+                });
+            } else if (typeof args[0] === 'object') {
+                $.each(args, function(obj) {
+                    this.each(function(el) {
+                        for (var event in obj) {
+                            if (object.hasOwnProperty(event)) {
+                                el.addEventListener(event, obj[event][1]);
+                            }
+                        }
+                    });
+                });
+            }
+
+            return this;
+        },
+
+        off: function() {
+            var args = $.toArr(arguments);
+
+            if (typeof args[0] === 'string') {
+                this.each(function(el) {
+                    el.removeEventListener(args[0], args[1], args[2]);
+                });
+            }  else if (typeof args[0] === 'object' && args.length === 1) {
+                $.each(args, function(obj) {
+                    this.each(function(el) {
+                        for (var event in obj) {
+                            if (object.hasOwnProperty(event)) {
+                                el.removeEventListener(event, obj[event][1]);
+                            }
+                        }
+                    });
+                });
+            }
 
             return this;
         }

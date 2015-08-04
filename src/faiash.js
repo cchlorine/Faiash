@@ -1,10 +1,10 @@
-var Faiash = (function() {
-    /**
-     * Faiash Core
-     *
-     * @author Rakume Hayashi<i@fake.moe>
-     */
+/**
+ * Faiash Core
+ *
+ * @author Rakume Hayashi<i@fake.moe>
+ */
 
+var Faiash = (function() {
     // Define the Faiash
     var Faiash = function(selector, context) {
         return new Faiash.ise.init(selector, context);
