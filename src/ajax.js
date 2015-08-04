@@ -1,10 +1,10 @@
-;(function($) {
-  /**
-   * Ajax
-   *
-   * @author Rakume Hayashi<i@fake.moe>
-   */
+/**
+ * Ajax
+ *
+ * @author Rakume Hayashi<i@fake.moe>
+ */
 
+;(function($) {
   // Set the cached array
   var ajaxcached = [];
 
@@ -16,7 +16,7 @@
               args = $.toArr(arguments);
 
           // Get the method if it is in the arguments
-          if (args[0].match(/^put|get|post|delete$/i)) {
+          if (args[0].match(/^get|post$/i)) {
               method = args.shift();
           }
 
@@ -107,14 +107,6 @@
 
       post: function() {
           return this.ajax('POST', arguments[0], arguments[1], arguments[2]);
-      },
-
-      put: function() {
-          return this.ajax('PUT', arguments[0], arguments[1], arguments[2]);
-      },
-
-      delete: function() {
-          return this.ajax('DELETE', arguments[0], arguments[1], arguments[2]);
       }
   });
 })(Faiash);
