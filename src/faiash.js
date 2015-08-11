@@ -1,19 +1,19 @@
 /**
- * Faiash Core
+ * F Core
  *
  * @author Rakume Hayashi<i@fake.moe>
  */
 
 var Faiash = (function() {
-    // Define the Faiash
-    var Faiash = function(selector, context) {
-        return new Faiash.ise.init(selector, context);
+    // Define the F
+    var F = function(selector, context) {
+        return new F.ise.init(selector, context);
     };
 
-    Faiash.ise = Faiash.prototype = {
-        // Version of Faiash
+    F.ise = F.prototype = {
+        // Version of F
         version: 0.1,
-        constructor: Faiash,
+        constructor: F,
 
         // Behaves like array
         push: [].push,
@@ -21,7 +21,7 @@ var Faiash = (function() {
     	  splice: [].splice
     };
 
-    var init = Faiash.ise.init = function(selector, context) {
+    var init = F.ise.init = function(selector, context) {
         // Return self when selector is "", void, undefined, false
         if (!selector) {
             return this;
@@ -47,72 +47,82 @@ var Faiash = (function() {
         return this;
     }
 
-    init.prototype = Faiash.ise;
+    init.prototype = F.ise;
 
-    Faiash.extend = Faiash.ise.extend = function() {
-        var copy;
+    F.toArr = function(r) {
+        return Array.prototype.slice.apply(r);
+    }
 
-        // No arguments
-        if (arguments.length < 1) {
+    F.extend = F.ise.extend = function() {
+        var args = F.toArr(arguments),
+            tmp = {}, copy;
+
+        // No args
+        if (args.length < 1) {
             return;
         }
 
-        // There are an array outside the object
-        for (var i = 0; i < arguments.length; i++) {
-            for (var name in arguments[i]) {
-                copy = arguments[i][name];
+        for (var i = 0; i < args.length; i++) {
+            for (var name in args[i]) {
+                copy = args[i][name];
 
-                // Prevent never-ending loop
-                if (this === copy) {
+                // Prevent never-ending loop and undefined values
+                if (this === copy || typeof(copy) === 'undefined') {
                     continue;
                 }
 
-                // Don't bring in undefined values
-                if (copy !== undefined) {
+                if (args.length === 1) {
                     this[name] = copy;
+                    continue;
+                }
+
+                if (typeof(copy) === 'object') {
+                    tmp[name] = $.each(tmp[name], copy, true);
+                } else {
+                    if (typeof(tmp[name]) !== 'undefined' && !args[2]) {
+                      continue;
+                    }
+
+                    tmp[name] = copy;
                 }
             }
+        }
+
+        if (args.length > 1) {
+          return tmp;
         }
 
         return this;
     }
 
-    Faiash.extend({
-        toArr: function(r) {
-            return Array.prototype.slice.apply(r);
-        },
+    F.each = function(arr, func) {
+        var forEach = Function.prototype.call.bind(Array.prototype.forEach);
+        return forEach(arr, func);
+    }
 
-        each: function(arr, func) {
-            var forEach = Function.prototype.call.bind(Array.prototype.forEach);
-            return forEach(arr, func);
-        },
+    F.ready = function(callback) {
+        return F(document).ready(callback);
+    }
 
-        ready: function(callback) {
-            return Faiash(document).ready(callback);
+    F.ise.each = function(callback) {
+        return F.each(this, callback);
+    }
+
+    F.ise.ready = function(callback) {
+        if (this[0].readyState != 'loading') {
+            callback();
+        } else {
+            this[0].addEventListener('DOMContentLoaded', callback);
         }
-    });
 
-    Faiash.ise.extend({
-        each: function(func) {
-            return Faiash.each(this, func);
-        },
+        return this;
+    }
 
-        ready: function(callback) {
-            if (this[0].readyState != 'loading') {
-                callback();
-            } else {
-                this[0].addEventListener('DOMContentLoaded', callback);
-            }
-
-            return this;
-        }
-    });
-
-    return Faiash;
+    return F;
 })();
 
 if (typeof module === "object" && typeof module.exports === "object") {
-    moudle.exports = Faiash;
+    moudle.exports = F;
 } else {
     window.Faiash = Faiash;
     window.$ === undefined && (window.$ = Faiash);
