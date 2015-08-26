@@ -1,32 +1,40 @@
 var gulp = require('gulp'),
+    del  = require('del'),
     concat = require('gulp-concat'),
     jshint = require('gulp-jshint'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
-    watch = require('gulp-watch');
+    watch  = require('gulp-watch'),
+    sourcemaps = require('gulp-sourcemaps');
 
-gulp.task('lint', function () {
+gulp.task('clean', function() {
+    del('dist');
+});
+
+gulp.task('lint', function() {
     gulp.src('./src/js/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('rjs', function () {
+gulp.task('build', function() {
     gulp.src([
             './src/faiash.js',
             './src/**/*.js'
         ])
+        .pipe(sourcemaps.init())
         .pipe(concat('faiash.js'))
         .pipe(gulp.dest('dist'))
         .pipe(rename('faiash.min.js'))
         .pipe(uglify())
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('watch', function () {
-    gulp.watch('./src/**.js', ['lint', 'rjs']);
+gulp.task('watch', function() {
+    gulp.watch('./src/**.js', ['clean', 'lint', 'build']);
 });
 
-gulp.task('default', function() {
-    gulp.start('lint', 'rjs');
+gulp.task('default', ['clean'], function() {
+    gulp.start('lint', 'build');
 });
