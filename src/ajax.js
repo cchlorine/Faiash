@@ -5,9 +5,6 @@
  */
 
 ;(function($) {
-  // Set the cached array
-  var ajaxcached = [];
-
   $.extend({
       ajax: function() {
           // Init the vars
@@ -63,11 +60,6 @@
           req = new XMLHttpRequest();
           req.open(method, url, true);
 
-          // If chached run it
-          if (ajaxcached[url] && method == 'GET' && typeof callback === 'function') {
-              callback(ajaxcached[url]);
-          }
-
           // When is POST
           method !== 'POST' || req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 
@@ -80,11 +72,6 @@
                           // When the data is json
                           if ((this.getResponseHeader('Content-Type') || '').match(/json/)) {
                               _data = JSON.parse(_data || null);
-                          }
-
-                          // Cache it
-                          if (method === 'GET' && !data) {
-                              ajaxcached[url] = _data;
                           }
 
                           if (typeof callback === 'function') {
