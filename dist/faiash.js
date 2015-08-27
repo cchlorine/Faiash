@@ -157,7 +157,7 @@ if (typeof module === "object" && typeof module.exports === "object") {
           // Get the data
           if (typeof[0] === 'string') {
               data = args.shift();
-          } else if (args[0].constructor === FormData) {
+          } else if (typeof[0] === 'object' && args[0].constructor === FormData) {
               upload = true;
               data = args.shift();
           } else if (typeof args[0] === 'object') { // When array
