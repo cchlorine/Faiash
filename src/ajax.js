@@ -69,8 +69,8 @@
           req.open(method, url, true);
 
           if (progress) {
-              req.upload.onproress = function(e) {
-                  pregress(e.loaded / e.total);
+              req.upload.onprogress = function(e) {
+                  progress(e.loaded / e.total);
               }
           }
 
