@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('clean', function() {
-    del('dist');
+    del('dist/*');
 });
 
 gulp.task('lint', function() {

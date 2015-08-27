@@ -138,8 +138,8 @@ if (typeof module === "object" && typeof module.exports === "object") {
   $.extend({
       ajax: function() {
           // Init the vars
-          var req, url, method,
-              data, dc, callback, error,
+          var req, url, method, data, upload,
+              progress, dc, callback, error,
               args = $.toArr(arguments);
 
           // Get the method if it is in the arguments
@@ -155,7 +155,12 @@ if (typeof module === "object" && typeof module.exports === "object") {
           }
 
           // Get the data
-          if (typeof args[0] === 'object') { // When array
+          if (typeof[0] === 'string') {
+              data = args.shift();
+          } else if (args[0].constructor === FormData) {
+              upload = true;
+              data = args.shift();
+          } else if (typeof args[0] === 'object') { // When array
               dc = args.shift();
 
               data = [];
@@ -165,8 +170,6 @@ if (typeof module === "object" && typeof module.exports === "object") {
               });
 
               data = data.join('&');
-          } else if (typeof[0] == 'string') { // When string
-              data = args.shift();
           } else { // When nothing
               data = null;
           }
@@ -186,12 +189,23 @@ if (typeof module === "object" && typeof module.exports === "object") {
               error = args.shift();
           }
 
+          // Get progress
+          if (typeof args[0] === 'function' && upload === true) {
+              progress = args.shift();
+          }
+
           // Open a XHR
           req = new XMLHttpRequest();
           req.open(method, url, true);
 
+          if (progress) {
+              req.upload.onproress = function(e) {
+                  pregress(e.loaded / e.total);
+              }
+          }
+
           // When is POST
-          method !== 'POST' || req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+          (!data || upload) || req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
           if (callback || error) {
               req.onreadystatechange = function() {
