@@ -103,11 +103,17 @@
       },
 
       get: function() {
-          return this.ajax('GET', arguments[0], arguments[1], arguments[2], arguments[3]);
+        var args = $.toArr(arguments);
+        args.unshift('GET');
+
+        return this.ajax.apply(this, args);
       },
 
       post: function() {
-          return this.ajax('POST', arguments[0], arguments[1], arguments[2], arguments[3]);
+          var args = $.toArr(arguments);
+          args.unshift('POST');
+
+          return this.ajax.apply(this, args);
       }
   });
 })(Faiash);
