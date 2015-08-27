@@ -143,7 +143,7 @@ if (typeof module === "object" && typeof module.exports === "object") {
               args = $.toArr(arguments);
 
           // Get the method if it is in the arguments
-          if (args[0].match(/^get|post$/i)) {
+          if (args[0].match(/^get|post|put|delete$/i)) {
               method = args.shift();
           }
 
