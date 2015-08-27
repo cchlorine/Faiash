@@ -233,11 +233,11 @@ if (typeof module === "object" && typeof module.exports === "object") {
       },
 
       get: function() {
-          return this.ajax('GET', arguments[0], arguments[1], arguments[2]);
+          return this.ajax('GET', arguments[0], arguments[1], arguments[2], arguments[3]);
       },
 
       post: function() {
-          return this.ajax('POST', arguments[0], arguments[1], arguments[2]);
+          return this.ajax('POST', arguments[0], arguments[1], arguments[2], arguments[3]);
       }
   });
 })(Faiash);
