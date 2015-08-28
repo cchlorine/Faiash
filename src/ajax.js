@@ -34,10 +34,12 @@
               dc = args.shift();
 
               data = [];
-              $.each(dc, function(o, i) {
-                  // Need to urlencode it
-                  data.push(i + '=' + encodeURIComponent(o));
-              });
+
+              for (var o in dc) {
+                if (object.hasOwnProperty(o)) {
+                    data.push(i + '=' + encodeURIComponent(o));
+                }
+              }
 
               data = data.join('&');
           } else { // When nothing

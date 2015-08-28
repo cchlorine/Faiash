@@ -18,7 +18,7 @@
                     el.addEventListener(args[0], args[1], (args[2] ? args[2] : false));
                 });
             } else if (typeof args[0] === 'object') {
-                $.each(args, function(obj) {
+                args.forEach(function(obj) {
                     this.each(function(el) {
                         for (var event in obj) {
                             if (object.hasOwnProperty(event)) {
@@ -40,7 +40,7 @@
                     el.removeEventListener(args[0], args[1], args[2]);
                 });
             }  else if (typeof args[0] === 'object' && args.length === 1) {
-                $.each(args, function(obj) {
+                args.forEach(function(obj) {
                     this.each(function(el) {
                         for (var event in obj) {
                             if (object.hasOwnProperty(event)) {

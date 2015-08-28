@@ -5,10 +5,12 @@
  */
 
 var Faiash = (function() {
+    var emptyArray = [],
+
     // Define the F
-    var F = function(selector, context) {
+    F = function(selector, context) {
         return new F.ise.init(selector, context);
-    };
+    }
 
     F.ise = F.prototype = {
         // Version of F
@@ -16,41 +18,63 @@ var Faiash = (function() {
         constructor: F,
 
         // Behaves like array
-        push: [].push,
-    	  sort: [].sort,
-    	  splice: [].splice
-    };
+        push: emptyArray.push,
+    	  sort: emptyArray.sort,
+    	  splice: emptyArray.splice,
 
-    var init = F.ise.init = function(selector, context) {
-        // Return self when selector is "", void, undefined, false
-        if (!selector) {
+        init: function(selector, context) {
+            // Return self when selector is "", void, undefined, false
+            if (!selector) {
+                return this;
+            }
+
+            // When context is string
+            if (typeof context === 'string') {
+                context = document.querySelector(context);
+            }
+
+            // When selector is an objcet
+            if (typeof selector === 'object') {
+                return [].push.call(this, selector);
+            } else {
+                selector = (context || document).querySelectorAll(selector);
+            }
+
+            for (i = 0; i < +selector.length; i++) {
+                this[i] = selector[i];
+            }
+
+            this.length = i;
+            return this;
+        },
+
+        each: function(callback) {
+            emptyArray.every.call(this, function(el, idx) {
+                return callback.call(el, el, idx) !== false;
+            });
+
+            return this;
+        },
+
+        ready: function(callback) {
+            if (this[0].readyState != 'loading') {
+                callback();
+            } else {
+                this[0].addEventListener('DOMContentLoaded', callback);
+            }
+
             return this;
         }
-
-        // When context is string
-        if (typeof context === 'string') {
-            context = document.querySelector(context);
-        }
-
-        // When selector is an objcet
-        if (typeof selector === 'object') {
-            return [].push.call(this, selector);
-        } else {
-            selector = (context || document).querySelectorAll(selector);
-        }
-
-        for (i = 0; i < +selector.length; i++) {
-            this[i] = selector[i];
-        }
-
-        this.length = i;
-        return this;
     }
 
-    init.prototype = F.ise;
+    F.ise.init.prototype = F.ise;
 
-    F.toArr = function(r) {
-        return Array.prototype.slice.apply(r);
+    F.toArr = function(array) {
+        return Array.prototype.slice.apply(array);
+    }
+
+    F.ready = function(callback) {
+        return F(document).ready(callback);
     }
 
     F.extend = F.ise.extend = function() {
@@ -90,29 +114,6 @@ var Faiash = (function() {
 
         if (args.length > 1) {
           return tmp;
-        }
-
-        return this;
-    }
-
-    F.each = function(arr, func) {
-        var forEach = Function.prototype.call.bind(Array.prototype.forEach);
-        return forEach(arr, func);
-    }
-
-    F.ready = function(callback) {
-        return F(document).ready(callback);
-    }
-
-    F.ise.each = function(callback) {
-        return F.each(this, callback);
-    }
-
-    F.ise.ready = function(callback) {
-        if (this[0].readyState != 'loading') {
-            callback();
-        } else {
-            this[0].addEventListener('DOMContentLoaded', callback);
         }
 
         return this;

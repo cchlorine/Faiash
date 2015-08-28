@@ -100,7 +100,7 @@
                     el.setAttribute(args[0], args[1]);
                 });
             } else if (typeof args[0] === 'object'){
-                $.each(args, function(obj) {
+                args.forEach(function(obj) {
                     this.each(function(el) {
                         for (var attr in obj) {
                             if (object.hasOwnProperty(attr)) {
@@ -142,6 +142,10 @@
             })
 
             return this;
+        },
+
+        val: function() {
+          //
         }
     });
 })(Faiash);
