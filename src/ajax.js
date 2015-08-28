@@ -81,15 +81,18 @@
               req.onreadystatechange = function() {
                   if(this.readyState === 4) {
                       if(this.status >= 200 && this.status < 400) {
-                          var _data = req.responseText;
-
-                          // When the data is json
                           if ((this.getResponseHeader('Content-Type') || '').match(/json/)) {
-                              _data = JSON.parse(_data || null);
-                          }
-
-                          if (typeof callback === 'function') {
-                              callback(_data); // Callback to the function
+                              if (typeof callback === 'function') {
+                                  callback(JSON.parse(req.responseText || null));
+                              }
+                          } else if ((this.getResponseHeader('Content-Type') || '').match(/xml/)) {
+                              if (typeof callback === 'function') {
+                                  callback(req.responseXML);
+                              }
+                          } else {
+                              if (typeof callback === 'function') {
+                                  callback(req.responseText); // Callback to the function
+                              }
                           }
                       } else if (typeof error === 'function') {
                           error(this.status); // Error
