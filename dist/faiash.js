@@ -35,7 +35,7 @@ var Faiash = (function() {
 
             // When selector is an objcet
             if (typeof selector === 'object') {
-                return [].push.call(this, selector);
+                return emptyArray.push.call(this, selector);
             } else {
                 selector = (context || document).querySelectorAll(selector);
             }
