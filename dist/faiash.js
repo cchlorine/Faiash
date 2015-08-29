@@ -1,5 +1,5 @@
 /**
- * F Core
+ * Faiash Core
  *
  * @author Rakume Hayashi<i@fake.moe>
  */
@@ -21,6 +21,10 @@ var Faiash = (function() {
         push: emptyArray.push,
     	  sort: emptyArray.sort,
     	  splice: emptyArray.splice,
+
+        forEach: emptyArray.forEach,
+        reduce: emptyArray.reduce,
+        indexOf: emptyArray.indexOf,
 
         init: function(selector, context) {
             // Return self when selector is "", void, undefined, false
@@ -49,8 +53,8 @@ var Faiash = (function() {
         },
 
         each: function(callback) {
-            emptyArray.every.call(this, function(el, idx) {
-                return callback.call(el, el, idx) !== false;
+            this.forEach(function(el, idx) {
+                callback(el, idx);
             });
 
             return this;
@@ -78,45 +82,54 @@ var Faiash = (function() {
     }
 
     F.extend = F.ise.extend = function() {
-        var args = F.toArr(arguments),
-            tmp = {}, copy;
+        var name, target, copy,
+            args = F.toArr(arguments),
+            i = 0, deep = false, tmp = {};
 
         // No args
         if (args.length < 1) {
             return;
         }
 
-        for (var i = 0; i < args.length; i++) {
-            for (var name in args[i]) {
-                copy = args[i][name];
+        if (typeof args[0] === 'boolean') {
+            deep = args.shift();
+        }
 
-                // Prevent never-ending loop and undefined values
-                if (this === copy || typeof(copy) === 'undefined') {
+        if (1 === args.length) {
+            target = this;
+        } else {
+            target = args.shift();
+        }
+
+        if (typeof target !== 'object' && typeof target !== 'function') {
+            target = {};
+        }
+
+        for (; i < args.length; i++) {
+            options = args[i];
+
+            if (options === null) {
+              continue;
+            }
+
+            for (name in options) {
+                src = target[name];
+                copy = options[name];
+
+                // Prevent never-ending loop
+                if (target === copy) {
                     continue;
                 }
 
-                if (args.length === 1) {
-                    this[name] = copy;
-                    continue;
-                }
-
-                if (typeof(copy) === 'object') {
-                    tmp[name] = $.each(tmp[name], copy, true);
-                } else {
-                    if (typeof(tmp[name]) !== 'undefined' && !args[2]) {
-                      continue;
-                    }
-
-                    tmp[name] = copy;
+                if (deep && copy && typeof copy === 'object') {
+                    $.extend(deep, src, copy);
+                } else if (copy !== undefined) {
+                    target[name] = copy;
                 }
             }
         }
 
-        if (args.length > 1) {
-          return tmp;
-        }
-
-        return this;
+        return target;
     }
 
     return F;
