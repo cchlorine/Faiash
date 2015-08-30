@@ -5,60 +5,49 @@
  */
 
 ;(function($) {
+    var emptyArray = [];
+
     $.ise.extend({
-        addClass: function(v) {
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
-                return false;
+        addClass: function(name) {
+            if (!name) {
+                return this;
             }
 
-            if (document.body.classList) {
-                this.each(function(el) {
-                    el.classList.add(v);
+            return document.body.classList ?
+                this.each(function() {
+                    this.classList.add(name);
+                }) :
+                this.each(function() {
+                    this.className += ' ' + name;
                 });
-            } else {
-                this.each(function(el) {
-                    el.className += ' ' + v;
-                });
-            }
-
-            return this;
         },
 
-        removeClass: function(v) {
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
-                return false;
+        removeClass: function(name) {
+            if (!name) {
+                return this;
             }
 
-            if (document.body.classList) {
-                this.each(function(el) {
-                    el.classList.remove(v);
+            return document.body.classList ?
+                this.each(function() {
+                    this.classList.remove(name);
+                }) :
+                this.each(function() {
+                    this.className = this.className.replace(new RegExp('(^|\\b)' + name.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
                 });
-            } else {
-                this.each(function(el) {
-                    el.className = el.className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-                });
-            }
-
-            return this;
         },
 
-        hasClass: function(v) {
-            var check;
-
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
+        hasClass: function(name) {
+            if (!name) {
                 return false;
             }
 
             if (document.body.classList) {
-                this.each(function(el) {
-                    check = el.classList.contains(v);
+                this.each(function() {
+                    check = this.classList.contains(name);
                 });
             } else {
-                this.each(function(el) {
-                    check = new RegExp('(^|)' + cls + '(|$)', 'gi').test(el.className);
+                this.each(function() {
+                    check = new RegExp('(^|)' + name + '(|$)', 'gi').test(this.className);
                 });
             }
 
@@ -69,83 +58,66 @@
             }
         },
 
-        toggleClass: function(v) {
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
-                return false;
+        toggleClass: function(name) {
+            if (!name) {
+                return this;
             }
 
-            if (document.body.classList) {
-                this.each(function(el) {
-                    el.classList.toggle(v);
-                });
-            } else {
-                this.each(function(el) {
-                    if (el.className.indexOf(v) >= 0) {
-                        el.className = el.className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            return document.body.classList ?
+                this.each(function() {
+                    this.classList.toggle(name);
+                }) :
+                this.each(function() {
+                    if (this.className.indexOf(v) >= 0) {
+                        this.className = this.className.replace(new RegExp('(^|\\b)' + name.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
                     } else {
-                        el.className += ' ' + v;
+                        this.className += ' ' + name;
                     }
                 });
-            }
-
-            return this;
         },
 
-        attr: function() {
-            var args = $.toArr(arguments);
-
-            if (args[1] && typeof args[0] === 'string') {
-                this.each(function(el) {
-                    el.setAttribute(args[0], args[1]);
-                });
-            } else if (typeof args[0] === 'object'){
-                args.forEach(function(obj) {
-                    this.each(function(el) {
-                        for (var attr in obj) {
-                            if (object.hasOwnProperty(attr)) {
-                                el.setAttribute(attr, obj[event][1]);
-                            }
-                        }
-                    });
-                });
-            } else {
-                return this[0].getAttribute(args[0]);
-            }
-
-            return this;
+        attr: function(name, value) {
+            return value ?
+                  this.each(function() {
+                      this.setAttribute(name, value);
+                  }) :
+                  this[0].getAttribute(name);
         },
 
-        css: function(v) {
-            if (!v) {
-                return this[0].style.cssText;
+        css: function(value) {
+            if (value.substr(-1) == ';') {
+                value = value.substr(0, v.length - 1);
             }
 
-            if (v.substr(-1) == ';') {
-                v = v.substr(0, v.length - 1);
-            }
-
-            this.each(function(el) {
-                el.style.cssText += (';' + v);
-            });
-
-            return this;
+            return value ?
+                this.each(function() {
+                    this.style.cssText += (';' + value);
+                }) :
+                this[0].style.cssText;
         },
 
-        html: function(v) {
-            if (!v) {
-                return this[0].innerHTML;
-            }
-
-            this.each(function(el) {
-                el.innerHTML = v;
-            })
-
-            return this;
+        html: function(value) {
+            return value ?
+                this.each(function() {
+                    this.innerHTML = value;
+                }) :
+                this[0].innerHTML;
         },
 
-        val: function() {
-          //
+        val: function(value) {
+            return value ?
+                this.each(function() {
+                    this.value = value;
+                }) :
+                this[0].value;
+        },
+
+        data: function(name, value) {
+            var attrName = 'data-' + name.toLowerCase();
+
+            return 0 in arguments ?
+                  this.attr(attrName, value) :
+                  this.attr(attrName);
         }
     });
 })(Faiash);

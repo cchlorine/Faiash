@@ -5,18 +5,14 @@
  */
 
 var Faiash = (function() {
-    var emptyArray = [],
+    var emptyArray = [], document = window.document
 
     // Define the F
-    F = function(selector, context) {
-        return new F.ise.init(selector, context);
+    $ = function(selector, context) {
+        return new $.ise.init(selector, context);
     }
 
-    F.ise = F.prototype = {
-        // Version of F
-        version: 0.1,
-        constructor: F,
-
+    $.ise = {
         // Behaves like array
         push: emptyArray.push,
     	  sort: emptyArray.sort,
@@ -41,49 +37,51 @@ var Faiash = (function() {
             if (typeof selector === 'object') {
                 return emptyArray.push.call(this, selector);
             } else {
-                selector = (context || document).querySelectorAll(selector);
+                elements = (context || document).querySelectorAll(selector);
             }
 
-            for (i = 0; i < +selector.length; i++) {
-                this[i] = selector[i];
+            for (i = 0; i < +elements.length; i++) {
+                this[i] = elements[i];
             }
 
             this.length = i;
+            this.selector = selector;
+
             return this;
         },
 
         each: function(callback) {
-            this.forEach(function(el, idx) {
-                callback(el, idx);
+            emptyArray.every.call(this, function(el, idx){
+                return callback.call(el, idx, el) !== false;
             });
 
             return this;
         },
 
         ready: function(callback) {
-            if (this[0].readyState != 'loading') {
+            if (document.readyState != 'loading') {
                 callback();
             } else {
-                this[0].addEventListener('DOMContentLoaded', callback);
+                document.addEventListener('DOMContentLoaded', callback);
             }
 
             return this;
         }
     }
 
-    F.ise.init.prototype = F.ise;
+    $.ise.init.prototype = $.ise;
 
-    F.toArr = function(array) {
+    $.toArr = function(array) {
         return Array.prototype.slice.apply(array);
     }
 
-    F.ready = function(callback) {
+    $.ready = function(callback) {
         return F(document).ready(callback);
     }
 
-    F.extend = F.ise.extend = function() {
+    $.extend = $.ise.extend = function() {
         var name, target, copy,
-            args = F.toArr(arguments),
+            args = $.toArr(arguments),
             i = 0, deep = false, tmp = {};
 
         // No args
@@ -132,7 +130,7 @@ var Faiash = (function() {
         return target;
     }
 
-    return F;
+    return $;
 })();
 
 if (typeof module === "object" && typeof module.exports === "object") {
@@ -149,122 +147,118 @@ if (typeof module === "object" && typeof module.exports === "object") {
  */
 
 ;(function($) {
-  $.extend({
-      ajax: function() {
-          // Init the vars
-          var req, url, method, data, upload,
-              progress, dc, callback, error,
-              args = $.toArr(arguments);
+    $.ajax = function() {
+        // Init the vars
+        var req, url, method, data, upload,
+            progress, dc, callback, error,
+            args = $.toArr(arguments);
 
-          // Get the method if it is in the arguments
-          if (args[0].match(/^get|post|put|delete$/i)) {
-              method = args.shift();
-          }
+        // Get the method if it is in the arguments
+        if (args[0].match(/^get|post|put|delete$/i)) {
+            method = args.shift();
+        }
 
-          // Set the url
-          url = args.shift();
+        // Set the url
+        url = args.shift();
 
-          if (!url) {
-              return false;
-          }
+        if (!url) {
+            return false;
+        }
 
-          // Get the data
-          if (typeof[0] === 'string') {
-              data = args.shift();
-          } else if (typeof[0] === 'object' && args[0].constructor === FormData) {
-              upload = true;
-              data = args.shift();
-          } else if (typeof args[0] === 'object') { // When array
-              dc = args.shift();
+        // Get the data
+        if (typeof[0] === 'string') {
+            data = args.shift();
+        } else if (typeof[0] === 'object' && args[0].constructor === FormData) {
+            upload = true;
+            data = args.shift();
+        } else if (typeof args[0] === 'object') { // When array
+            dc = args.shift();
 
-              data = [];
+            data = [];
 
-              for (var o in dc) {
-                if (object.hasOwnProperty(o)) {
-                    data.push(i + '=' + encodeURIComponent(o));
+            for (var o in dc) {
+                data.push(i + '=' + encodeURIComponent(o));
+            }
+
+            data = data.join('&');
+        } else { // When nothing
+            data = null;
+        }
+
+        // Set the method
+        if (!method) {
+            method = data ? 'POST' : 'GET';
+        }
+
+        // Get the callback
+        if (typeof args[0] === 'function') {
+            callback = args.shift();
+        }
+
+        // Get the error
+        if (typeof args[0] === 'function') {
+            error = args.shift();
+        }
+
+        // Get progress
+        if (typeof args[0] === 'function' && upload === true) {
+            progress = args.shift();
+        }
+
+        // Open a XHR
+        req = new XMLHttpRequest();
+        req.open(method, url, true);
+
+        if (progress) {
+            req.upload.onprogress = function(e) {
+                progress(e.loaded / e.total);
+            }
+        }
+
+        // When is POST
+        (!data || upload) || req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        if (callback || error) {
+            req.onreadystatechange = function() {
+                if (this.readyState === 4) {
+                    if (this.status >= 200 && this.status < 400) {
+                        if ((this.getResponseHeader('Content-Type') || '').match(/json/)) {
+                            if (typeof callback === 'function') {
+                                callback(JSON.parse(req.responseText || null));
+                            }
+                        } else if ((this.getResponseHeader('Content-Type') || '').match(/xml/)) {
+                            if (typeof callback === 'function') {
+                                callback(req.responseXML);
+                            }
+                        } else {
+                            if (typeof callback === 'function') {
+                                callback(req.responseText); // Callback to the function
+                            }
+                        }
+                    } else if (typeof error === 'function') {
+                        error(this.status); // Error
+                    }
                 }
-              }
+            }
+        }
 
-              data = data.join('&');
-          } else { // When nothing
-              data = null;
-          }
+      req.send(data || '');
+      return req; // Return the detail
+    }
 
-          // Set the method
-          if (!method) {
-              method = data ? 'POST' : 'GET';
-          }
-
-          // Get the callback
-          if (typeof args[0] === 'function') {
-              callback = args.shift();
-          }
-
-          // Get the error
-          if (typeof args[0] === 'function') {
-              error = args.shift();
-          }
-
-          // Get progress
-          if (typeof args[0] === 'function' && upload === true) {
-              progress = args.shift();
-          }
-
-          // Open a XHR
-          req = new XMLHttpRequest();
-          req.open(method, url, true);
-
-          if (progress) {
-              req.upload.onprogress = function(e) {
-                  progress(e.loaded / e.total);
-              }
-          }
-
-          // When is POST
-          (!data || upload) || req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-          if (callback || error) {
-              req.onreadystatechange = function() {
-                  if(this.readyState === 4) {
-                      if(this.status >= 200 && this.status < 400) {
-                          if ((this.getResponseHeader('Content-Type') || '').match(/json/)) {
-                              if (typeof callback === 'function') {
-                                  callback(JSON.parse(req.responseText || null));
-                              }
-                          } else if ((this.getResponseHeader('Content-Type') || '').match(/xml/)) {
-                              if (typeof callback === 'function') {
-                                  callback(req.responseXML);
-                              }
-                          } else {
-                              if (typeof callback === 'function') {
-                                  callback(req.responseText); // Callback to the function
-                              }
-                          }
-                      } else if (typeof error === 'function') {
-                          error(this.status); // Error
-                      }
-                  }
-              }
-          }
-
-          req.send(data || '');
-          return req; // Return the detail
-      },
-
-      get: function() {
+    $.get = function() {
         var args = $.toArr(arguments);
         args.unshift('GET');
 
         return this.ajax.apply(this, args);
-      },
+    }
 
-      post: function() {
-          var args = $.toArr(arguments);
-          args.unshift('POST');
+    $.post = function() {
+        var args = $.toArr(arguments);
+        args.unshift('POST');
 
-          return this.ajax.apply(this, args);
-      }
-  });
+        return this.ajax.apply(this, args);
+    }
 })(Faiash);
 
 /**
@@ -274,60 +268,49 @@ if (typeof module === "object" && typeof module.exports === "object") {
  */
 
 ;(function($) {
+    var emptyArray = [];
+
     $.ise.extend({
-        addClass: function(v) {
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
-                return false;
+        addClass: function(name) {
+            if (!name) {
+                return this;
             }
 
-            if (document.body.classList) {
-                this.each(function(el) {
-                    el.classList.add(v);
+            return document.body.classList ?
+                this.each(function() {
+                    this.classList.add(name);
+                }) :
+                this.each(function() {
+                    this.className += ' ' + name;
                 });
-            } else {
-                this.each(function(el) {
-                    el.className += ' ' + v;
-                });
-            }
-
-            return this;
         },
 
-        removeClass: function(v) {
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
-                return false;
+        removeClass: function(name) {
+            if (!name) {
+                return this;
             }
 
-            if (document.body.classList) {
-                this.each(function(el) {
-                    el.classList.remove(v);
+            return document.body.classList ?
+                this.each(function() {
+                    this.classList.remove(name);
+                }) :
+                this.each(function() {
+                    this.className = this.className.replace(new RegExp('(^|\\b)' + name.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
                 });
-            } else {
-                this.each(function(el) {
-                    el.className = el.className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-                });
-            }
-
-            return this;
         },
 
-        hasClass: function(v) {
-            var check;
-
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
+        hasClass: function(name) {
+            if (!name) {
                 return false;
             }
 
             if (document.body.classList) {
-                this.each(function(el) {
-                    check = el.classList.contains(v);
+                this.each(function() {
+                    check = this.classList.contains(name);
                 });
             } else {
-                this.each(function(el) {
-                    check = new RegExp('(^|)' + cls + '(|$)', 'gi').test(el.className);
+                this.each(function() {
+                    check = new RegExp('(^|)' + name + '(|$)', 'gi').test(this.className);
                 });
             }
 
@@ -338,83 +321,66 @@ if (typeof module === "object" && typeof module.exports === "object") {
             }
         },
 
-        toggleClass: function(v) {
-            // Return false when v is '', void, undefined, false or when v is not a string
-            if (!v || typeof v !== 'string') {
-                return false;
+        toggleClass: function(name) {
+            if (!name) {
+                return this;
             }
 
-            if (document.body.classList) {
-                this.each(function(el) {
-                    el.classList.toggle(v);
-                });
-            } else {
-                this.each(function(el) {
-                    if (el.className.indexOf(v) >= 0) {
-                        el.className = el.className.replace(new RegExp('(^|\\b)' + v.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            return document.body.classList ?
+                this.each(function() {
+                    this.classList.toggle(name);
+                }) :
+                this.each(function() {
+                    if (this.className.indexOf(v) >= 0) {
+                        this.className = this.className.replace(new RegExp('(^|\\b)' + name.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
                     } else {
-                        el.className += ' ' + v;
+                        this.className += ' ' + name;
                     }
                 });
-            }
-
-            return this;
         },
 
-        attr: function() {
-            var args = $.toArr(arguments);
-
-            if (args[1] && typeof args[0] === 'string') {
-                this.each(function(el) {
-                    el.setAttribute(args[0], args[1]);
-                });
-            } else if (typeof args[0] === 'object'){
-                args.forEach(function(obj) {
-                    this.each(function(el) {
-                        for (var attr in obj) {
-                            if (object.hasOwnProperty(attr)) {
-                                el.setAttribute(attr, obj[event][1]);
-                            }
-                        }
-                    });
-                });
-            } else {
-                return this[0].getAttribute(args[0]);
-            }
-
-            return this;
+        attr: function(name, value) {
+            return value ?
+                  this.each(function() {
+                      this.setAttribute(name, value);
+                  }) :
+                  this[0].getAttribute(name);
         },
 
-        css: function(v) {
-            if (!v) {
-                return this[0].style.cssText;
+        css: function(value) {
+            if (value.substr(-1) == ';') {
+                value = value.substr(0, v.length - 1);
             }
 
-            if (v.substr(-1) == ';') {
-                v = v.substr(0, v.length - 1);
-            }
-
-            this.each(function(el) {
-                el.style.cssText += (';' + v);
-            });
-
-            return this;
+            return value ?
+                this.each(function() {
+                    this.style.cssText += (';' + value);
+                }) :
+                this[0].style.cssText;
         },
 
-        html: function(v) {
-            if (!v) {
-                return this[0].innerHTML;
-            }
-
-            this.each(function(el) {
-                el.innerHTML = v;
-            })
-
-            return this;
+        html: function(value) {
+            return value ?
+                this.each(function() {
+                    this.innerHTML = value;
+                }) :
+                this[0].innerHTML;
         },
 
-        val: function() {
-          //
+        val: function(value) {
+            return value ?
+                this.each(function() {
+                    this.value = value;
+                }) :
+                this[0].value;
+        },
+
+        data: function(name, value) {
+            var attrName = 'data-' + name.toLowerCase();
+
+            return 0 in arguments ?
+                  this.attr(attrName, value) :
+                  this.attr(attrName);
         }
     });
 })(Faiash);
@@ -426,53 +392,47 @@ if (typeof module === "object" && typeof module.exports === "object") {
  */
 
 ;(function($) {
-    $.ise.extend({
-        on: function() {
-            var args = $.toArr(arguments);
+    $.ise.on = function() {
+        var args = $.toArr(arguments);
 
-            if (typeof args[0] === 'string') {
-                if (!args[0] || !args[1]) {
-                    return this;
-                }
-
-                this.each(function(el) {
-                    el.addEventListener(args[0], args[1], (args[2] ? args[2] : false));
-                });
-            } else if (typeof args[0] === 'object') {
-                args.forEach(function(obj) {
-                    this.each(function(el) {
-                        for (var event in obj) {
-                            if (object.hasOwnProperty(event)) {
-                                el.addEventListener(event, obj[event][1]);
-                            }
-                        }
-                    });
-                });
+        if (typeof args[0] === 'string') {
+            if (!args[0] || !args[1]) {
+                return this;
             }
 
-            return this;
-        },
-
-        off: function() {
-            var args = $.toArr(arguments);
-
-            if (typeof args[0] === 'string') {
-                this.each(function(el) {
-                    el.removeEventListener(args[0], args[1], args[2]);
+            this.each(function() {
+                this.addEventListener(args[0], args[1], (args[2] ? args[2] : false));
+            });
+        } else if (typeof args[0] === 'object') {
+            args.forEach(function(obj) {
+                this.each(function() {
+                    for (var event in obj) {
+                        this.addEventListener(event, obj[event][1]);
+                    }
                 });
-            }  else if (typeof args[0] === 'object' && args.length === 1) {
-                args.forEach(function(obj) {
-                    this.each(function(el) {
-                        for (var event in obj) {
-                            if (object.hasOwnProperty(event)) {
-                                el.removeEventListener(event, obj[event][1]);
-                            }
-                        }
-                    });
-                });
-            }
-
-            return this;
+            });
         }
-    });
+
+        return this;
+    }
+
+    $.ise.off = function() {
+        var args = $.toArr(arguments);
+
+        if (typeof args[0] === 'string') {
+            this.each(function(el) {
+                el.removeEventListener(args[0], args[1], args[2]);
+            });
+        }  else if (typeof args[0] === 'object' && args.length === 1) {
+            args.forEach(function(obj) {
+                this.each(function() {
+                    for (var event in obj) {
+                        this.removeEventListener(event, obj[event][1]);
+                    }
+                });
+            });
+        }
+
+        return this;
+    }
 })(Faiash);

@@ -5,18 +5,14 @@
  */
 
 var Faiash = (function() {
-    var emptyArray = [],
+    var emptyArray = [], document = window.document
 
     // Define the F
-    F = function(selector, context) {
-        return new F.ise.init(selector, context);
+    $ = function(selector, context) {
+        return new $.ise.init(selector, context);
     }
 
-    F.ise = F.prototype = {
-        // Version of F
-        version: 0.1,
-        constructor: F,
-
+    $.ise = {
         // Behaves like array
         push: emptyArray.push,
     	  sort: emptyArray.sort,
@@ -41,49 +37,51 @@ var Faiash = (function() {
             if (typeof selector === 'object') {
                 return emptyArray.push.call(this, selector);
             } else {
-                selector = (context || document).querySelectorAll(selector);
+                elements = (context || document).querySelectorAll(selector);
             }
 
-            for (i = 0; i < +selector.length; i++) {
-                this[i] = selector[i];
+            for (i = 0; i < +elements.length; i++) {
+                this[i] = elements[i];
             }
 
             this.length = i;
+            this.selector = selector;
+
             return this;
         },
 
         each: function(callback) {
-            this.forEach(function(el, idx) {
-                callback(el, idx);
+            emptyArray.every.call(this, function(el, idx){
+                return callback.call(el, idx, el) !== false;
             });
 
             return this;
         },
 
         ready: function(callback) {
-            if (this[0].readyState != 'loading') {
+            if (document.readyState != 'loading') {
                 callback();
             } else {
-                this[0].addEventListener('DOMContentLoaded', callback);
+                document.addEventListener('DOMContentLoaded', callback);
             }
 
             return this;
         }
     }
 
-    F.ise.init.prototype = F.ise;
+    $.ise.init.prototype = $.ise;
 
-    F.toArr = function(array) {
+    $.toArr = function(array) {
         return Array.prototype.slice.apply(array);
     }
 
-    F.ready = function(callback) {
+    $.ready = function(callback) {
         return F(document).ready(callback);
     }
 
-    F.extend = F.ise.extend = function() {
+    $.extend = $.ise.extend = function() {
         var name, target, copy,
-            args = F.toArr(arguments),
+            args = $.toArr(arguments),
             i = 0, deep = false, tmp = {};
 
         // No args
@@ -132,7 +130,7 @@ var Faiash = (function() {
         return target;
     }
 
-    return F;
+    return $;
 })();
 
 if (typeof module === "object" && typeof module.exports === "object") {
