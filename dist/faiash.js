@@ -348,8 +348,8 @@ if (typeof module === "object" && typeof module.exports === "object") {
         },
 
         css: function(value) {
-            if (value.substr(-1) == ';') {
-                value = value.substr(0, v.length - 1);
+            if (value.substr(-1) === ';') {
+                value = value.substr(0, value.length - 1);
             }
 
             return value ?
