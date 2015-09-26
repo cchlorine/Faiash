@@ -5,7 +5,8 @@
  */
 
 var Faiash = (function() {
-    var emptyArray = [], document = window.document
+    var emptyArray = [],
+        document   = window.document;
 
     // Define the F
     $ = function(selector, context) {
@@ -340,7 +341,7 @@ if (typeof module === "object" && typeof module.exports === "object") {
         },
 
         attr: function(name, value) {
-            return value ?
+            return value || value === '' ?
                   this.each(function() {
                       this.setAttribute(name, value);
                   }) :
@@ -360,7 +361,7 @@ if (typeof module === "object" && typeof module.exports === "object") {
         },
 
         html: function(value) {
-            return value ?
+            return value || value === '' ?
                 this.each(function() {
                     this.innerHTML = value;
                 }) :
@@ -368,7 +369,7 @@ if (typeof module === "object" && typeof module.exports === "object") {
         },
 
         val: function(value) {
-            return value ?
+            return value || value === '' ?
                 this.each(function() {
                     this.value = value;
                 }) :

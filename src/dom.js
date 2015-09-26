@@ -77,7 +77,7 @@
         },
 
         attr: function(name, value) {
-            return value ?
+            return value || value === '' ?
                   this.each(function() {
                       this.setAttribute(name, value);
                   }) :
@@ -97,7 +97,7 @@
         },
 
         html: function(value) {
-            return value ?
+            return value || value === '' ?
                 this.each(function() {
                     this.innerHTML = value;
                 }) :
@@ -105,7 +105,7 @@
         },
 
         val: function(value) {
-            return value ?
+            return value || value === '' ?
                 this.each(function() {
                     this.value = value;
                 }) :

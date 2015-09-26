@@ -5,7 +5,8 @@
  */
 
 var Faiash = (function() {
-    var emptyArray = [], document = window.document
+    var emptyArray = [],
+        document   = window.document;
 
     // Define the F
     $ = function(selector, context) {
